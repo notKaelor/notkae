@@ -135,10 +135,42 @@ html{scroll-behavior:smooth;scroll-padding-top:84px}
 .tl .when{color:var(--honey);font-size:.78rem}
 .tl h3{margin:2px 0 6px;font-size:1.1rem}
 .tl p{margin:0;color:var(--mute);max-width:60ch}
+/* ===== visual upgrade (solo estilos, sin texto) ===== */
+#fx{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+body::after{content:"";position:fixed;inset:0;z-index:7;pointer-events:none;opacity:.06;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.hero::before{content:"";position:absolute;z-index:-1;inset:-10% -30% -10% -10%;pointer-events:none;filter:blur(30px);animation:aur 14s ease-in-out infinite alternate;
+  background:radial-gradient(40% 50% at 70% 40%,color-mix(in srgb,var(--honey) 24%,transparent),transparent 70%),radial-gradient(30% 40% at 15% 85%,color-mix(in srgb,var(--honey) 12%,transparent),transparent 70%)}
+@keyframes aur{to{transform:translate(4%,-6%) scale(1.12)}}
+h1 .ch:not(.pt){background:linear-gradient(100deg,var(--ink) 38%,var(--honey) 50%,var(--ink) 62%);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:drop .6s cubic-bezier(.2,.8,.2,1) forwards calc(var(--i)*70ms + 200ms),shim 5s ease-in-out calc(2s + var(--i)*90ms) infinite}
+@keyframes shim{0%{background-position:100% 0}60%,100%{background-position:0 0}}
+h1 .ch.pt{text-shadow:0 0 44px var(--honey)}
+.deco{transform:translate(calc(var(--ox,0)*1px),calc(-50% + var(--oy,0)*1px));transition:transform .4s ease-out}
+.cell,.card{position:relative;--rx:0deg;--ry:0deg;transition:background .25s,color .25s,border-color .25s,transform .18s ease-out}
+.cell::after,.card::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .3s;
+  background:radial-gradient(260px circle at var(--px,50%) var(--py,50%),color-mix(in srgb,var(--honey) 26%,transparent),transparent 65%)}
+.cell:hover::after{background:radial-gradient(240px circle at var(--px,50%) var(--py,50%),rgba(255,255,255,.4),transparent 65%)}
+.cell:hover::after,.card:hover::after{opacity:1}
+.cell:hover,.card:hover{transform:perspective(800px) rotateX(var(--rx)) rotateY(var(--ry)) translateY(-4px)}
+.cta,.ghost,.link{transition:transform .25s cubic-bezier(.2,.8,.2,1),filter .2s,background .2s,color .2s}
+section:not(.hero){position:relative}
+section:not(.hero)::before{content:"";position:absolute;top:-7px;left:0;width:14px;height:14px;background:var(--honey);z-index:1;
+  clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);transform:scale(0) rotate(-120deg);transition:transform .9s .1s cubic-bezier(.3,.7,.2,1)}
+section.in::before{transform:none}
+section:not(.hero)::after{content:"";position:absolute;top:-1px;left:0;width:100%;height:1px;background:linear-gradient(90deg,var(--honey),transparent 65%);transform:scaleX(0);transform-origin:left;transition:transform 1.4s .2s}
+section.in::after{transform:none}
+.tl{position:relative}
+.tl::after{content:"";position:absolute;left:-1px;top:0;width:2px;height:calc(var(--tp,0)*100%);background:var(--honey);box-shadow:0 0 14px var(--honey)}
+.tl li::before{transition:transform .4s,filter .4s}
+.tl li.on::before{transform:scale(1.5);filter:drop-shadow(0 0 6px var(--honey))}
+.cur{position:fixed;left:0;top:0;width:38px;height:38px;z-index:9;pointer-events:none;opacity:0;transition:opacity .3s}
+.cur svg{width:100%;height:100%;fill:none;stroke:var(--honey);stroke-width:2;transition:transform .35s cubic-bezier(.3,.7,.2,1),fill .3s}
+.cur.big svg{transform:rotate(30deg) scale(1.6);fill:color-mix(in srgb,var(--honey) 16%,transparent)}
+@media (prefers-reduced-motion:reduce){.hero::before{animation:none}.cur{display:none}}
 </style>
 </head>
 <body>
-<div class="hex"></div><div class="glow"></div><div class="prog"></div>
+<div class="hex"></div><canvas id="fx" aria-hidden="true"></canvas><div class="glow"></div><div class="prog"></div>
 <svg class="sbee" viewBox="0 0 100 80" aria-hidden="true"><g class="wing"><ellipse cx="38" cy="22" rx="16" ry="10" fill="none" stroke="var(--honey)" stroke-width="3"/><ellipse cx="60" cy="20" rx="14" ry="9" fill="none" stroke="var(--honey)" stroke-width="3"/></g><ellipse cx="50" cy="48" rx="30" ry="20" fill="var(--honey)"/><rect x="40" y="29" width="7" height="38" fill="var(--bg)"/><rect x="55" y="29" width="7" height="38" fill="var(--bg)"/></svg>
 <nav class="nav" aria-label="Principal"><div>
   <a class="logo" href="#top">kaelor<b>.</b></a>
@@ -276,6 +308,66 @@ html{scroll-behavior:smooth;scroll-padding-top:84px}
     e.preventDefault();var v=document.getElementById('dtxt'),o=v.textContent;
     try{navigator.clipboard.writeText(o);v.textContent='copiado';setTimeout(function(){v.textContent=o},1400)}catch(x){}
   });
+})();
+</script>
+<script>
+(function(){
+  var rm=matchMedia('(prefers-reduced-motion:reduce)').matches,fine=matchMedia('(hover:hover) and (pointer:fine)').matches;
+  /* campo de hexágonos reactivo */
+  var cv=document.getElementById('fx'),x=cv.getContext('2d'),W,H,P=[],m={x:-999,y:-999},dpr=Math.min(devicePixelRatio||1,2),col='#ffc61a',fr=0;
+  function rc(){col=getComputedStyle(document.documentElement).getPropertyValue('--honey').trim()||col}
+  function hp(cx,cy,r,a){x.beginPath();for(var i=0;i<6;i++){var t=a+i*Math.PI/3;x[i?'lineTo':'moveTo'](cx+r*Math.cos(t),cy+r*Math.sin(t))}x.closePath()}
+  function init(){W=innerWidth;H=innerHeight;cv.width=W*dpr;cv.height=H*dpr;x.setTransform(dpr,0,0,dpr,0,0);rc();
+    var n=Math.min(70,Math.round(W*H/22000));P=[];
+    for(var i=0;i<n;i++)P.push({x:Math.random()*W,y:Math.random()*H,r:6+Math.random()*22,a:Math.random()*6,va:(Math.random()-.5)*.004,vx:(Math.random()-.5)*.15,vy:-.1-Math.random()*.3,ux:0,uy:0,f:Math.random()<.18})}
+  function draw(){
+    x.clearRect(0,0,W,H);if(++fr%120==0)rc();x.strokeStyle=col;x.fillStyle=col;x.lineWidth=1;
+    for(var i=0;i<P.length;i++){var p=P[i];
+      var dx=p.x-m.x,dy=p.y-m.y,d=Math.sqrt(dx*dx+dy*dy),near=d<180?1-d/180:0;
+      if(near>0){p.ux+=dx/d*near*.9;p.uy+=dy/d*near*.9}
+      p.ux*=.92;p.uy*=.92;p.x+=p.vx+p.ux;p.y+=p.vy+p.uy;p.a+=p.va+near*.02;
+      if(p.x<-40)p.x=W+40;if(p.x>W+40)p.x=-40;if(p.y<-40)p.y=H+40;if(p.y>H+40)p.y=-40;
+      var yy=(((p.y-scrollY*p.r*.02)%(H+80))+(H+80))%(H+80)-40;
+      x.globalAlpha=.1+near*.6;hp(p.x,yy,p.r,p.a);x.stroke();
+      if(p.f){x.globalAlpha=.05+near*.2;x.fill()}
+      if(near>0){x.globalAlpha=near*.45;x.beginPath();x.moveTo(p.x,yy);x.lineTo(m.x,m.y);x.stroke()}}
+    x.globalAlpha=1}
+  function loop(){draw();requestAnimationFrame(loop)}
+  init();addEventListener('resize',init);
+  addEventListener('pointermove',function(e){m.x=e.clientX;m.y=e.clientY});
+  document.addEventListener('pointerleave',function(){m.x=m.y=-999});
+  if(rm)draw();else loop();
+  /* tilt + spotlight */
+  document.querySelectorAll('.cell,.card').forEach(function(el){
+    el.addEventListener('pointermove',function(e){if(e.pointerType==='touch')return;
+      var r=el.getBoundingClientRect(),px=(e.clientX-r.left)/r.width,py=(e.clientY-r.top)/r.height;
+      el.style.setProperty('--px',px*100+'%');el.style.setProperty('--py',py*100+'%');
+      el.style.setProperty('--ry',(px-.5)*10+'deg');el.style.setProperty('--rx',(.5-py)*10+'deg')});
+    el.addEventListener('pointerleave',function(){el.style.setProperty('--rx','0deg');el.style.setProperty('--ry','0deg')})});
+  /* botones magnéticos */
+  document.querySelectorAll('.cta,.ghost,.link').forEach(function(el){
+    el.addEventListener('pointermove',function(e){if(e.pointerType==='touch')return;var r=el.getBoundingClientRect();
+      el.style.transform='translate('+((e.clientX-r.left-r.width/2)*.18)+'px,'+((e.clientY-r.top-r.height/2)*.28)+'px)'});
+    el.addEventListener('pointerleave',function(){el.style.transform=''})});
+  /* parallax del panal */
+  var dc=document.querySelector('.deco');
+  if(dc&&!rm)addEventListener('pointermove',function(e){dc.style.setProperty('--ox',(e.clientX/innerWidth-.5)*-34);dc.style.setProperty('--oy',(e.clientY/innerHeight-.5)*-34)});
+  /* línea de tiempo que se dibuja con el scroll */
+  var tl=document.querySelector('.tl'),lis=tl?tl.querySelectorAll('li'):[];
+  function tp(){if(!tl)return;var r=tl.getBoundingClientRect(),p=(innerHeight*.7-r.top)/r.height;
+    tl.style.setProperty('--tp',Math.max(0,Math.min(1,p)));
+    lis.forEach(function(li){li.classList.toggle('on',li.getBoundingClientRect().top<innerHeight*.7)})}
+  addEventListener('scroll',tp,{passive:true});tp();
+  /* cursor hexagonal */
+  if(fine&&!rm){
+    var c=document.createElement('div');c.className='cur';
+    c.innerHTML='<svg viewBox="-20 -20 40 40"><polygon points="0,-16 13.9,-8 13.9,8 0,16 -13.9,8 -13.9,-8"/></svg>';
+    document.body.appendChild(c);
+    var cx=-100,cy=-100;
+    addEventListener('pointermove',function(){c.style.opacity=1},{once:true});
+    document.addEventListener('pointerover',function(e){c.classList.toggle('big',!!e.target.closest('a,button,.cell,.card'))});
+    (function f(){cx+=(m.x-cx)*.18;cy+=(m.y-cy)*.18;c.style.transform='translate('+(cx-19)+'px,'+(cy-19)+'px)';requestAnimationFrame(f)})();
+  }
 })();
 </script>
 </body>
